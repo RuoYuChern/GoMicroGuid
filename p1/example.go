@@ -206,6 +206,81 @@ func printGen() {
 	fmt.Printf("p21: %v, %+v, %#v, %T\n", p2, p2, p2, p2)
 }
 
+func printPointer() {
+	// 声明一个int32的指针，其默认值为nil
+	var iPtr *int32
+	// 判断指针是否空
+	if iPtr == nil {
+		fmt.Printf("iPtr is nil:%p\n", iPtr)
+	}
+	// 声明并初始化一个整型变量
+	var i int32 = 10
+	iPtr = &i
+	fmt.Printf("iPtr value:%v, pointer to value:%d\n", iPtr, *iPtr)
+
+	b := 30
+	fmt.Printf("%T\n", b)
+
+	var c int32 = 100
+	// ptrB 指向
+	var ptrB *int32 = &c
+	// ptrA 指向ptrB
+	var ptrA **int32 = &ptrB
+	fmt.Printf("&ptrB: %p, %p\n", &ptrB, ptrA)
+	fmt.Printf("&c: %p, %p\n", &c, *ptrA)
+	fmt.Printf("c: %d, %d\n", c, **ptrA)
+}
+
+type CallBack func(int32)
+
+func cb1(r int32) {
+	fmt.Printf("cb1: %d\n", r)
+}
+
+func cb2(r int32) {
+	fmt.Printf("cb2: %d\n", r)
+}
+
+func cb3(r int32) {
+	fmt.Printf("cb3: %d\n", r)
+}
+
+func printFun() {
+	mp := make(map[int32]CallBack)
+	mp[10] = cb1
+	mp[11] = cb2
+	mp[12] = cb3
+	for k, v := range mp {
+		v(k)
+	}
+}
+
+func f3(r **int) {
+	*r = new(int)
+	**r = 20
+}
+
+func fp1() *Person {
+	p := &Person{age: 10, name: "RuoY", sex: "M"}
+	return p
+}
+
+func fp2() *Person {
+	p := new(Person)
+	p.age = 20
+	p.name = "RY"
+	p.sex = "FM"
+	return p
+}
+
+func sum() func(n int) int {
+	s := 0
+	return func(n int) int {
+		s = n * (n + 1) / 2
+		return s
+	}
+}
+
 func main() {
 	var age int
 	var money int = 11
@@ -224,4 +299,19 @@ func main() {
 	pintMap()
 	printPerson()
 	printGen()
+
+	printPointer()
+	printFun()
+
+	var pptr *int
+	f3(&pptr)
+	fmt.Printf("pptr:%d\n", *pptr)
+
+	person := fp1()
+	fmt.Printf("%+v\n", *person)
+	person = fp2()
+	fmt.Printf("%+v\n", *person)
+
+	ss := sum()
+	ss(10)
 }
